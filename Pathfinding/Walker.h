@@ -4,7 +4,6 @@
 #include <deque>
 #include <memory>
 
-class CCanvas;
 class CGraph;
 class CGraphNode;
 
@@ -15,10 +14,10 @@ public:
 	CWalker();
 	virtual ~CWalker();
 	//Find the path in 1 call
-	virtual void FindPath( std::unique_ptr<CGraph> pGraph );
+	virtual void FindPath( const std::shared_ptr<CGraph>& pGraph );
 	//Find the path by steps
 	/**********************/
-	virtual void Setup( std::unique_ptr<CGraph> pGraph );
+	virtual void Setup( const std::shared_ptr<CGraph>& pGraph );
 	virtual bool Step() = 0;
 	virtual void Cleanup();
 	/**********************/
@@ -37,7 +36,7 @@ protected:
 	virtual void ClearNodes() = 0;
 	void CreatePath( CGraphNode* pEnd );
 protected:
-	std::unique_ptr<CGraph> m_pGraph;
+	std::shared_ptr<CGraph> m_pGraph;
 	CGraphNode* m_pCurrent;
 	CGraphNode* m_pEnd;
 	int     m_iMaxSteps;

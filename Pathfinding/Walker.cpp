@@ -16,10 +16,10 @@ CWalker::~CWalker()
 {
 }
 
-void CWalker::FindPath( std::unique_ptr<CGraph> pGraph )
+void CWalker::FindPath( const std::shared_ptr<CGraph>& pGraph )
 {
-	Setup( std::move(pGraph) );
-	while ( Step() );
+	Setup( pGraph );
+	while ( !Step() );
 	Cleanup();
 }
 
@@ -33,9 +33,9 @@ std::deque<CGraphNode*> CWalker::GetPath()
 	return m_path;
 }
 
-void CWalker::Setup( std::unique_ptr<CGraph> pGraph )
+void CWalker::Setup( const std::shared_ptr<CGraph>& pGraph )
 {
-	m_pGraph = std::move( pGraph );
+	m_pGraph = pGraph;
 	m_pGraph->SetBegin( m_iBegin );
 	m_pGraph->SetEnd( m_iEnd );
 

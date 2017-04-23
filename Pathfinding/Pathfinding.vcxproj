@@ -119,11 +119,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AStarWalker.h" />
+    <ClInclude Include="BestFSWalker.h" />
+    <ClInclude Include="BFSWalker.h" />
+    <ClInclude Include="DFSWalker.h" />
+    <ClInclude Include="DijkstraWalker.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphNode.h" />
     <ClInclude Include="Walker.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AStarWalker.cpp" />
+    <ClCompile Include="BestFSWalker.cpp" />
+    <ClCompile Include="BFSWalker.cpp" />
+    <ClCompile Include="DFSWalker.cpp" />
+    <ClCompile Include="DijkstraWalker.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphNode.cpp" />
     <ClCompile Include="Pathfinding.cpp" />

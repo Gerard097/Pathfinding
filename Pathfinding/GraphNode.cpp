@@ -1,11 +1,10 @@
 #include "GraphNode.h"
 #include <algorithm>
 
-CGraphNode::CGraphNode( id_type id, CGraph* pGraph, NodeType::T type )
+CGraphNode::CGraphNode( id_type id, CGraph* pGraph )
 	:
 	m_pParent{ nullptr },
 	m_bVisited{ false },
-	m_type{ type },
 	m_dwID{ id },
 	m_pGraph{ pGraph },
 	m_fWeight{ 0 },
@@ -42,16 +41,6 @@ void CGraphNode::SetVisited( bool visit )
 bool CGraphNode::Visited()
 {
 	return m_bVisited;
-}
-
-NodeType::T CGraphNode::GetType()
-{
-	return m_type;
-}
-
-void CGraphNode::SetType( NodeType::T type )
-{
-	m_type = type;
 }
 
 CGraphNode::id_type CGraphNode::GetID()
