@@ -31,8 +31,8 @@ auto main( int argc, char** argv ) -> int
 
 	std::unique_ptr<CWalker> pWalker = std::make_unique<CAStarWalker>();
 
-	const int gridCols = 8;
-	const int gridRows = 8;
+	const int gridCols = 150;
+	const int gridRows = 150;
 
 	CreateGrid( gridCols, gridRows, &myGraph );
 
@@ -92,11 +92,11 @@ void CreateGrid( int cols, int rows, CGraph * pGraph )
 
 			int current = y * rows + x;
 
-			if ( x )
+			/*if ( x )
 				std::cout << "\t";
 			std::cout << current ;
 			if ( x < (cols - 1) )
-				std::cout << "\t-";
+				std::cout << "\t-";*/
 			pGraph->CreateNode( current );
 			auto pCurrent = pGraph->GetNode( current );
 			pCurrent->SetPosition( { x * 20.f, y * 20.f, 0.f , 0.f } );
@@ -106,7 +106,7 @@ void CreateGrid( int cols, int rows, CGraph * pGraph )
 			pGraph->AddConnection( pCurrent, pGraph->GetNode( top * cols + x ), true );
 		}
 
-		std::cout << std::endl;
+		/*std::cout << std::endl;
 		if ( y < (rows - 1) )
 		{
 			for ( int i = 0; i < cols; ++i )
@@ -116,9 +116,9 @@ void CreateGrid( int cols, int rows, CGraph * pGraph )
 			}
 			
 			std::cout << std::endl;
-		}
+		}*/
 
 	}
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }

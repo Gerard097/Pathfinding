@@ -1,6 +1,7 @@
 #include "AStarWalker.h"
 #include "Graph.h"
 
+#include <iostream>
 
 CAStarWalker::CAStarWalker() 
 {
@@ -17,6 +18,8 @@ bool CAStarWalker::Step()
 		 m_iCurrentSteps++ < m_iMaxSteps && !m_nodes.empty() )
 	{
 		m_pCurrent = *m_nodes.begin();
+
+		std::cout << "Nodo visitado: " << m_pCurrent->GetID() << std::endl;
 
 		m_pCurrent->SetVisited( true );
 
@@ -52,10 +55,16 @@ void CAStarWalker::LoadConnections( CGraphNode *pNode )
 		if ( !node->Visited() && !node->IsBlocked() &&
 			 fTentDist < fNodeTent )
 		{
+			auto it = m_nodes.find( node );
+
+			if ( it != m_nodes.end() )
+			{
+				m_nodes.erase( it );
+			}
+
 			node->SetTentativeDistance( fTentDist );
 
-			if ( !node->GetParent() )
-				m_nodes.insert( node );
+			m_nodes.insert( node );
 
 			node->SetParent( pNode );
 		}

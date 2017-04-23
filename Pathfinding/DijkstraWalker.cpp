@@ -46,10 +46,16 @@ void CDijkstraWalker::LoadConnections( CGraphNode *pNode )
 		if ( !node->Visited() && !node->IsBlocked() &&
 			 fTentDist < fNodeTent )
 		{
+			auto it = m_nodes.find( node );
+
+			if ( it != m_nodes.end() )
+			{
+				m_nodes.erase( it );
+			}
+
 			node->SetTentativeDistance( fTentDist );
 
-			if ( !node->GetParent() || node == m_pEnd )
-				m_nodes.insert( node );
+			m_nodes.insert( node );
 
 			node->SetParent( pNode );
 		}

@@ -177,17 +177,6 @@ CGraphNode* CGraph::GetEndNode()
 	return m_pEnd.get();
 }
 
-//CGraph::NodesContainer::iterator CGraph::GetNodeIt( CGraph::id_type id )
-//{
-//	return std::find_if(	m_nodes.begin(), 
-//							m_nodes.end(), 
-//							[id]( std::unique_ptr<CGraphNode>& pNode )
-//							{
-//								return pNode->GetID() == id;
-//							}						
-//						);
-//}
-
 std::vector<CGraphNode*> CGraph::GetNodeConnections( CGraphNode * pNode )
 {
 	auto nodeConnections = m_connections.find( pNode->GetID() );

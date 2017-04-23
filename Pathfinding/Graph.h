@@ -13,7 +13,7 @@ class CGraph
 public:
 	using id_type = unsigned int;
 	using ConnectionsMap = std::unordered_map<id_type, std::unordered_set<id_type>>;
-	using NodesContainer = std::unordered_map<id_type, std::unique_ptr<CGraphNode>>;
+	using NodesMap = std::unordered_map<id_type, std::unique_ptr<CGraphNode>>;
 	CGraph();
 	CGraph( const CGraph& graph );
 	~CGraph();
@@ -37,14 +37,12 @@ public:
 	void SetHeuristicFunction( std::function<float( CGraphNode* node, CGraph* graph )> func );
 	void Clean();
 private:
-	//NodesContainer::iterator GetNodeIt( id_type id );
 private:
 	std::function<float( CGraphNode* node, CGraph* graph )> m_heuristicFunc;
 	std::unique_ptr<CGraphNode> m_pBegin;
 	std::unique_ptr<CGraphNode> m_pEnd;
-	//std::vector<std::unique_ptr<CGraphNode>> m_nodes;
-	NodesContainer m_nodes;
-	ConnectionsMap m_connections;
+	NodesMap		m_nodes;
+	ConnectionsMap	m_connections;
 };
 
 #endif //_CGRAPH_H_

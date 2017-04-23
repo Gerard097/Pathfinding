@@ -33,14 +33,14 @@ public:
 	~CGraphNode();
 private:
 	id_type		m_dwID;
+	float       m_fTentativeDistance; 
+	float       m_fWeight;
+	bool		m_bVisited;
+	bool        m_bBlocked;
 	CGraph* m_pGraph;
 	std::string m_name;
 	CGraphNode*	m_pParent;
 	Mat4D::CVector4D m_position;
-	bool		m_bVisited;
-	bool        m_bBlocked;
-	float       m_fWeight;
-	float       m_fTentativeDistance;
 };
 
 #endif //_CGRAPHNODE_H_
