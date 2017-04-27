@@ -1,189 +1,84 @@
 #include "Graph.h"
-#include "GraphNode.h"
 #include <algorithm>
 
-CGraph::CGraph()
+CGraph::CGraph() :
+	m_iRows{ 0 },
+	m_iCols{ 0 },
+	m_pBegin{ nullptr },
+	m_pEnd{ nullptr },
+	m_pConnections{ nullptr }
 {
 }
 
-CGraph::CGraph( const CGraph &graph )
+CGraph::CGraph( const CGraph & graph )
 {
 	*this = graph;
+}
+
+CGraph& CGraph::operator=( const CGraph & graph )
+{
+	m_iRows = graph.m_iRows;
+	m_iCols = graph.m_iRows;
+
+	m_nodes.reserve( graph.m_nodes.size() );
+
+	for ( auto& pNode : graph.m_nodes )
+	{
+		auto pNewNode = std::make_unique<CGraphNode>( *pNode );
+		pNewNode->SetGraph( this );
+		m_nodes.push_back( std::move(pNewNode) );
+	}
+
+	m_heuristicFunc = graph.m_heuristicFunc;
+
+	if ( graph.m_pBegin )
+		SetBegin( graph.m_pBegin->GetID() );
+	else
+		m_pBegin = nullptr;
+
+	if ( graph.m_pEnd )
+		SetBegin( graph.m_pEnd->GetID() );
+	else
+		m_pEnd = nullptr;
+
+	m_pConnections = &const_cast<CGraph&>(graph).m_connections;
+
+	return *this;
 }
 
 CGraph::~CGraph()
 {
 }
 
-CGraph &CGraph::operator=( const CGraph &graph )
-{
-	if ( graph.m_pBegin )
-		m_pBegin = std::make_unique<CGraphNode>( *graph.m_pBegin );
-
-	if ( graph.m_pEnd )
-		m_pEnd = std::make_unique<CGraphNode>( *graph.m_pEnd );
-
-	for ( auto& node : graph.m_nodes )
-	{
-		auto pNode = std::make_unique<CGraphNode>( *node.second );
-		pNode->SetGraph( this );
-		m_nodes.emplace(node.first, std::move(pNode) );
-	}
-
-	m_connections = graph.m_connections;
-
-	m_heuristicFunc = graph.m_heuristicFunc;
-
-	return *this;
-}
-
-void CGraph::AddNode( std::unique_ptr<CGraphNode> pNewNode )
-{
-	if ( !pNewNode ) return;
-
-	if ( m_nodes.find( pNewNode->GetID() ) == m_nodes.end() )
-	{
-		m_nodes[pNewNode->GetID()] = std::move( pNewNode );
-	}
-}
-
-void CGraph::CreateNode( id_type id )
-{
-	if ( m_nodes.find( id ) == m_nodes.end() )
-	{
-		m_nodes[id] = std::make_unique<CGraphNode>( id, this );
-	}
-}
-
-void CGraph::RemoveNode( id_type id )
-{
-	auto itNode = m_nodes.find( id );
-
-	CGraphNode* pToRemove = nullptr;
-
-	if ( itNode != m_nodes.end() )
-	{
-		pToRemove = itNode->second.get();
-		m_nodes.erase( itNode );
-	}
-	else if ( m_pBegin )
-	{
-		if ( m_pBegin->GetID() == id )
-		{
-			pToRemove = m_pBegin.get();
-			m_pBegin.reset();
-		}
-
-		else if ( m_pEnd )
-		{
-			if ( m_pEnd->GetID() == id )
-			{
-				pToRemove = m_pEnd.get();
-				m_pEnd.reset();
-			}
-		}
-	}
-
-	if ( pToRemove )
-	{
-		RemoveNodeConnections( pToRemove );
-		RemoveNodeFromConnections( pToRemove );
-	}
-}
-
-void CGraph::AddConnection( CGraphNode *pFrom, CGraphNode *pTo, bool bBidirectional )
-{
-	if ( pFrom && pTo && pFrom != pTo )
-	{
-		m_connections[pFrom->GetID()].insert( pTo->GetID() );
-		if ( bBidirectional )
-			m_connections[pTo->GetID()].insert( pFrom->GetID() );
-	}
-}
-
-void CGraph::RemoveNodeConnections( CGraphNode *pNode )
-{
-	m_connections.erase( pNode->GetID() );
-}
-
-void CGraph::RemoveNodeFromConnections( CGraphNode *pNode )
-{
-	for ( auto& connection : m_connections )
-	{
-		connection.second.erase( pNode->GetID() );
-	}
-}
-
-void CGraph::RemoveConnection( CGraphNode *pFrom, CGraphNode *pTo, bool bBidirectional )
-{
-	if ( pFrom && pTo )
-	{
-		auto fromConnection = m_connections.find( pFrom->GetID() );
-		if ( fromConnection != m_connections.end() )
-		{
-			fromConnection->second.erase( pTo->GetID() );
-		}
-		if ( bBidirectional )
-		{
-			auto toConnection = m_connections.find( pTo->GetID() );
-			if ( toConnection != m_connections.end() )
-			{
-				toConnection->second.erase( pFrom->GetID() );
-			}
-		}
-	}
-
-}
-
-float CGraph::GetNodeHeuristic( CGraphNode *node )
-{
-	return m_heuristicFunc( node, this );
-}
-
-CGraph::ConnectionsMap CGraph::GetConnections()
-{
-	return m_connections;
-}
-
 CGraphNode* CGraph::GetNode( id_type id )
 {
-	if ( m_pBegin )
-	{
-		if ( m_pBegin->GetID() == id )
-			return m_pBegin.get();
-	}
-
-	if ( m_pEnd )
-	{
-		if ( m_pEnd->GetID() == id )
-			return m_pEnd.get();
-	}
-
-	auto it = m_nodes.find( id );
-
-	if ( it != m_nodes.end() )
-		return it->second.get();
-
-	return nullptr;
+	return ((int)id >= 0 && (int)id < (m_iRows * m_iCols)) ? m_nodes[id].get() : nullptr;
 }
 
 CGraphNode* CGraph::GetBeginNode()
 {
-	return m_pBegin.get();
+	return m_pBegin;
 }
 
 CGraphNode* CGraph::GetEndNode()
 {
-	return m_pEnd.get();
+	return m_pEnd;
+}
+
+CGraph::ConnectionsMap CGraph::GetConnections()
+{
+	return m_pConnections ? *m_pConnections : m_connections;
 }
 
 std::vector<CGraphNode*> CGraph::GetNodeConnections( CGraphNode * pNode )
 {
-	auto nodeConnections = m_connections.find( pNode->GetID() );
+	auto nodeConnections = m_pConnections ? m_pConnections->find(pNode->GetID()) : m_connections.find( pNode->GetID() );
 
 	std::vector<CGraphNode*> connections;
 
-	if ( nodeConnections != m_connections.end() )
+	auto connEnd = m_pConnections ? m_pConnections->end() : m_connections.end();
+
+	if ( nodeConnections != connEnd )
 	{
 		for ( auto& connection_id : nodeConnections->second )
 		{
@@ -194,80 +89,100 @@ std::vector<CGraphNode*> CGraph::GetNodeConnections( CGraphNode * pNode )
 	return std::move( connections );
 }
 
+std::vector<CGraphNode*> CGraph::GetNodes()
+{
+	std::vector<CGraphNode*> out;
 
-void CGraph::SetHeuristicFunction( std::function<float( CGraphNode *, CGraph * )> func )
+	out.reserve( m_nodes.size() );
+	
+	for ( auto& pNode : m_nodes )
+		out.emplace_back( pNode.get() );
+
+	return std::move( out );
+}
+
+void CGraph::Create( int iCols, int iRows, float fNodeWidth, float fNodeHeight, Connections::Type connType )
+{
+	Clean();
+
+	m_iRows = iRows;
+	m_iCols = iCols;
+
+	m_nodes.reserve( iCols * iRows );
+
+	for ( int i = 0; i < (iCols * iRows); ++i )
+	{
+		auto pNode = std::make_unique<CGraphNode>( i, this );
+		pNode->SetPosition( { i % iCols * fNodeWidth,
+								i / iCols * fNodeHeight, 0.f, 1.f } );
+		m_nodes.push_back( std::move( pNode ) );
+	}
+
+	for ( int i = 0; i < (iCols * iRows); ++i )
+	{
+		const int x = i % iCols;
+		const int y = i / iCols;
+
+		const int iLeft = std::max( x - 1, 0 );
+		const int iRight = std::min( x + 1, iCols - 1 );
+		const int iTop = std::max( y - 1, 0 );
+		const int iDown = std::min( y + 1, iRows - 1 );
+
+		AddConnection( iLeft + y * iCols, i, true );
+		AddConnection( iRight + y * iCols, i, true );
+		AddConnection( iTop * iCols + x, i, true );
+		AddConnection( iDown * iCols + x, i, true );
+
+		if ( connType == Connections::EIGHT_DIRECTIONS )
+		{
+			AddConnection( iLeft + iTop * iCols, i, true );
+			AddConnection( iRight + iDown * iCols, i, true );
+			AddConnection( iTop * iCols + iRight, i, true );
+			AddConnection( iDown * iCols + iLeft, i, true );
+		}
+	}
+}
+
+void CGraph::SetHeuristicFunction( HeuristeicFuncType func )
 {
 	m_heuristicFunc = func;
 }
 
+void CGraph::SetBegin( id_type id )
+{
+	m_pBegin = GetNode( id );
+}
+
+void CGraph::SetEnd( id_type id )
+{
+	m_pEnd = GetNode( id );
+}
+
 void CGraph::Clean()
 {
-	m_connections.clear();
-	m_pBegin.reset();
-	m_pEnd.reset();
+	m_iRows = 0;
+	m_iCols = 0;
 	m_nodes.clear();
+	m_connections.clear();
+	m_pConnections = nullptr;
+	m_pBegin = nullptr;
+	m_pEnd = nullptr;
 }
 
-std::vector<CGraphNode*> CGraph::GetNodes()
+float CGraph::GetNodeHeuristic( CGraphNode* node )
 {
-	std::vector<CGraphNode*> nodes;
-
-	nodes.reserve( m_nodes.size() + 2 );
-
-	for ( auto& node : m_nodes )
-		nodes.emplace_back( node.second.get() );
-
-	if ( m_pBegin )
-		nodes.emplace_back( m_pBegin.get() );
-	if ( m_pEnd )
-		nodes.emplace_back( m_pEnd.get() );
-
-	nodes.shrink_to_fit();
-
-	return std::move( nodes );
+	return m_heuristicFunc( node, this );
 }
 
-void CGraph::SetBegin( CGraph::id_type id )
+void CGraph::AddConnection( id_type id_from, id_type id_to, bool bBidirectional )
 {
-	if ( m_pBegin )
+	auto pFrom = GetNode( id_from );
+	auto pTo = GetNode( id_to );
+
+	if ( pFrom && pTo && pFrom != pTo )
 	{
-		if ( m_pBegin->GetID() == id )
-			return;
-		m_nodes[m_pBegin->GetID()] =  std::move( m_pBegin );
-	}
-
-	if ( m_pEnd )
-		if ( m_pEnd->GetID() == id )
-			m_pBegin = std::move( m_pEnd );
-
-	auto it = m_nodes.find( id );
-
-	if ( it != m_nodes.end() )
-	{
-		m_pBegin = std::move( it->second );
-		m_nodes.erase( it );
-	}
-
-}
-
-void CGraph::SetEnd( CGraph::id_type id )
-{
-	if ( m_pEnd )
-	{
-		if ( m_pEnd->GetID() == id )
-			return;
-		m_nodes[m_pEnd->GetID()] = std::move( m_pEnd );
-	}
-
-	if ( m_pBegin )
-		if ( m_pBegin->GetID() == id )
-			m_pEnd = std::move( m_pBegin );
-
-	auto it = m_nodes.find( id );
-
-	if ( it != m_nodes.end() )
-	{
-		m_pEnd = std::move( it->second );
-		m_nodes.erase( it );
+		m_connections[id_from].insert( id_to );
+		if ( bBidirectional )
+			m_connections[id_to].insert( id_from );
 	}
 }

@@ -41,7 +41,7 @@ bool CBestFSWalker::Step( )
 
 void CBestFSWalker::LoadConnections( CGraphNode* pNode )
 {
-	auto connections = std::move( m_pGraph->GetNodeConnections( pNode ) );
+	auto connections = std::move( GetConnections( pNode ) );
 
 	for ( auto& node : connections )
 	{

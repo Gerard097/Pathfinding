@@ -47,7 +47,7 @@ void CDFSWalker::ClearNodes()
 
 void CDFSWalker::LoadConnections( CGraphNode *pNode )
 {
-	auto connections = std::move( m_pGraph->GetNodeConnections( pNode ) );
+	auto connections = std::move( GetConnections( pNode ) );
 
 	for ( auto& node : connections )
 	{

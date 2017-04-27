@@ -7,11 +7,10 @@
 #include <iostream>
 #include <chrono>
 
-void CreateGrid( int x, int y, CGraph* pGraph );
 
 auto main( int argc, char** argv ) -> int
 {
-	CGraph myGraph;
+	auto myGraph = std::make_shared<CGraph>();
 
 	auto manhattanDistance = []( CGraphNode* pNode, CGraph* pGraph )
 	{
@@ -27,14 +26,13 @@ auto main( int argc, char** argv ) -> int
 		return (pEnd->GetPosition() - pNode->GetPosition()).Magnitude();
 	};
 
-	myGraph.SetHeuristicFunction( euclideanDistance );
+	const int gridCols = 200;
+	const int gridRows = 200;
 
-	std::unique_ptr<CWalker> pWalker = std::make_unique<CAStarWalker>();
+	myGraph->Create( gridCols, gridRows, 50, 50, Connections::EIGHT_DIRECTIONS );
+	myGraph->SetHeuristicFunction( euclideanDistance );
 
-	const int gridCols = 150;
-	const int gridRows = 150;
-
-	CreateGrid( gridCols, gridRows, &myGraph );
+	std::unique_ptr<CWalker> pWalker = std::make_unique<CBestFSWalker>();
 
 	using namespace std::chrono;
 
@@ -42,7 +40,7 @@ auto main( int argc, char** argv ) -> int
 
 	auto start = steady_clock::now();
 
-	auto pGraphCopy = std::make_shared<CGraph>( myGraph );
+	auto pGraphCopy = std::make_shared<CGraph>( *myGraph );
 
 	pWalker->SetBegin( 0 );
 	pWalker->SetEnd( gridCols * gridRows - 1 );
@@ -74,51 +72,11 @@ auto main( int argc, char** argv ) -> int
 
 	}
 
+	pGraphCopy = nullptr;
+	pWalker = nullptr;
+	myGraph = nullptr;
+
 	std::cin.ignore( std::numeric_limits<std::streamsize>::max() , '\n' );
 	
 	return 0;
-}
-
-void CreateGrid( int cols, int rows, CGraph * pGraph )
-{
-	pGraph->Clean();
-
-	std::cout << "Graph:" << std::endl << std::endl;
-
-	for ( int y = 0; y < rows; ++y )
-	{
-		for ( int x = 0; x < cols; ++x )
-		{
-
-			int current = y * rows + x;
-
-			/*if ( x )
-				std::cout << "\t";
-			std::cout << current ;
-			if ( x < (cols - 1) )
-				std::cout << "\t-";*/
-			pGraph->CreateNode( current );
-			auto pCurrent = pGraph->GetNode( current );
-			pCurrent->SetPosition( { x * 20.f, y * 20.f, 0.f , 0.f } );
-			int left = std::max( 0, x - 1 );
-			int top = std::max( 0, y - 1 );
-			pGraph->AddConnection( pCurrent, pGraph->GetNode( y * rows + left ), true );
-			pGraph->AddConnection( pCurrent, pGraph->GetNode( top * cols + x ), true );
-		}
-
-		/*std::cout << std::endl;
-		if ( y < (rows - 1) )
-		{
-			for ( int i = 0; i < cols; ++i )
-			{
-				if ( i ) std::cout << "\t\t";
-				std::cout << "|";
-			}
-			
-			std::cout << std::endl;
-		}*/
-
-	}
-
-	//std::cout << std::endl;
 }

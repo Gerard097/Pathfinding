@@ -3,6 +3,7 @@
 
 #include <deque>
 #include <memory>
+#include <vector>
 
 class CGraph;
 class CGraphNode;
@@ -35,6 +36,7 @@ protected:
 	virtual void LoadConnections( CGraphNode* pNode ) = 0;
 	virtual void ClearNodes() = 0;
 	void CreatePath( CGraphNode* pEnd );
+	std::vector<CGraphNode*> GetConnections( CGraphNode* pNode );
 protected:
 	std::shared_ptr<CGraph> m_pGraph;
 	CGraphNode* m_pCurrent;

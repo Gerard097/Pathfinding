@@ -36,6 +36,7 @@ std::deque<CGraphNode*> CWalker::GetPath()
 void CWalker::Setup( const std::shared_ptr<CGraph>& pGraph )
 {
 	m_pGraph = pGraph;
+
 	m_pGraph->SetBegin( m_iBegin );
 	m_pGraph->SetEnd( m_iEnd );
 
@@ -104,3 +105,8 @@ void CWalker::CreatePath( CGraphNode *pEnd )
 
 }
 
+
+std::vector<CGraphNode*> CWalker::GetConnections( CGraphNode * pNode )
+{
+	return  m_pGraph->GetNodeConnections( pNode );
+}

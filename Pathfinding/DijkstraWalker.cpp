@@ -37,7 +37,7 @@ bool CDijkstraWalker::Step()
 
 void CDijkstraWalker::LoadConnections( CGraphNode *pNode )
 {
-	auto connections = std::move( m_pGraph->GetNodeConnections( pNode ) );
+	auto connections = std::move( GetConnections( pNode ) );
 
 	for ( auto& node : connections )
 	{

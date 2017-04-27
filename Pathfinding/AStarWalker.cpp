@@ -1,8 +1,6 @@
 #include "AStarWalker.h"
 #include "Graph.h"
 
-#include <iostream>
-
 CAStarWalker::CAStarWalker() 
 {
 }
@@ -18,8 +16,6 @@ bool CAStarWalker::Step()
 		 m_iCurrentSteps++ < m_iMaxSteps && !m_nodes.empty() )
 	{
 		m_pCurrent = *m_nodes.begin();
-
-		std::cout << "Nodo visitado: " << m_pCurrent->GetID() << std::endl;
 
 		m_pCurrent->SetVisited( true );
 
@@ -46,7 +42,7 @@ bool CAStarWalker::Step()
 
 void CAStarWalker::LoadConnections( CGraphNode *pNode )
 {
-	auto connections = std::move( m_pGraph->GetNodeConnections( pNode ) );
+	auto connections = std::move( GetConnections( pNode ) );
 
 	for ( auto& node : connections )
 	{
