@@ -1,5 +1,6 @@
 #include "AlgebraLib.h"
 #include <algorithm>
+#include <cmath>
 
 namespace Mat4D
 {

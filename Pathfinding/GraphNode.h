@@ -2,6 +2,7 @@
 #define	_CGRAPHNODE_H_
 
 #include <vector>
+#include <string>
 #include <AlgebraLib.h>
 
 class CGraph;

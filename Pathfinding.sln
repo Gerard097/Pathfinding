@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pathfinding", "Pathfinding\Pathfinding.vcxproj", "{A4DC0C1A-8108-4738-BBC7-E01405688CEA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AlgebraLib", "AlgebraLib\AlgebraLib.vcxproj", "{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,19 @@ Global
 		{A4DC0C1A-8108-4738-BBC7-E01405688CEA}.Release|x64.Build.0 = Release|x64
 		{A4DC0C1A-8108-4738-BBC7-E01405688CEA}.Release|x86.ActiveCfg = Release|Win32
 		{A4DC0C1A-8108-4738-BBC7-E01405688CEA}.Release|x86.Build.0 = Release|Win32
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Debug|x64.ActiveCfg = Debug|x64
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Debug|x64.Build.0 = Debug|x64
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Debug|x86.ActiveCfg = Debug|Win32
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Debug|x86.Build.0 = Debug|Win32
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Release|x64.ActiveCfg = Release|x64
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Release|x64.Build.0 = Release|x64
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Release|x86.ActiveCfg = Release|Win32
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E568C05-BA78-4EE2-9B24-CECFF4A424EE}
 	EndGlobalSection
 EndGlobal
