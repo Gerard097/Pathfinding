@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pathfinding", "Pathfinding\Pathfinding.vcxproj", "{A4DC0C1A-8108-4738-BBC7-E01405688CEA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0} = {FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AlgebraLib", "AlgebraLib\AlgebraLib.vcxproj", "{FD0E31B4-3A9C-4ED4-8847-A4E9308E6FA0}"
 EndProject

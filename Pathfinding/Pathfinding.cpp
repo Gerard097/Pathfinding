@@ -26,8 +26,8 @@ auto main( int argc, char** argv ) -> int
 		return (pEnd->GetPosition() - pNode->GetPosition()).Magnitude();
 	};
 
-	const int gridCols = 200;
-	const int gridRows = 200;
+	const int gridCols = 50;
+	const int gridRows = 50;
 
 	myGraph->Create( gridCols, gridRows, 50, 50, Connections::EIGHT_DIRECTIONS );
 	myGraph->SetHeuristicFunction( euclideanDistance );
@@ -48,7 +48,7 @@ auto main( int argc, char** argv ) -> int
 	
 	auto end = steady_clock::now();
 
-	std::cout << "Time to calculate path: " << duration<float>(end - start).count() << std::endl;
+	std::cout << "Time to calculate path: " << duration_cast<duration<float, std::milli>>(end - start).count() << std::endl;
 
 	auto path = pWalker->GetPath();
 
